@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Pembelajaran Sistem Kontrol Permesinan Kapal Besar</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #0d2144;
+    --navy-light: #1a3a6b;
+    --grey: #2e3a4a;
+    --grey-light: #8a9bb0;
+    --orange: #f57c00;
+    --orange-light: #ff9800;
+    --orange-glow: #ffb74d;
+    --white: #f0f4f8;
+    --text: #c8d8e8;
+    --accent: #00bcd4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(10,22,40,0.97);
+    border-bottom: 2px solid var(--orange);
+    backdrop-filter: blur(10px);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; color: var(--orange-light);
+    letter-spacing: 2px;
+  }
+  .nav-week-btn {
+    background: var(--navy-light);
+    border: 1px solid var(--orange);
+    color: var(--orange-light);
+    padding: 6px 14px; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-week-btn:hover { background: var(--orange); color: var(--navy); }
+
+  /* ── WEEK MENU DROPDOWN ── */
+  .week-menu {
+    position: fixed; top: 60px; right: 0; z-index: 999;
+    background: var(--navy-mid);
+    border-left: 3px solid var(--orange);
+    border-bottom: 3px solid var(--orange);
+    width: 280px;
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px; padding: 12px;
+    border-radius: 0 0 0 12px;
+  }
+  .week-menu.open { display: grid; }
+  .week-link {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--navy-light);
+    border: 1px solid var(--grey);
+    color: var(--text);
+    padding: 10px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .week-link:hover { background: var(--orange); color: var(--navy); border-color: var(--orange); }
+
+  /* ── PAGES ── */
+  .page { display: none; min-height: 100vh; padding-top: 60px; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  #home.page.active { display: block; }
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a1628 0%, #0d2144 40%, #0a1a35 100%);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(245,124,0,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(0,188,212,0.06) 0%, transparent 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px);
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } }
+
+  /* Engine room SVG illustration */
+  .engine-illustration {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    max-width: 900px; padding: 2rem;
+    animation: fadeUp 1s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(40px); } to { opacity:1; transform: translateY(0); } }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--navy);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.8rem;
+    letter-spacing: 3px; padding: 4px 16px;
+    border-radius: 2px; margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+  }
+  .hero h1 span { color: var(--orange-light); }
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: var(--grey-light);
+    letter-spacing: 4px;
+    margin-bottom: 2rem;
+  }
+  .dosen-card {
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(245,124,0,0.4);
+    border-radius: 8px; padding: 1rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .dosen-avatar {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; font-weight: 700;
+    font-family: 'Bebas Neue'; color: var(--navy);
+  }
+  .dosen-info { text-align: left; }
+  .dosen-info .name { font-weight: 700; color: var(--white); font-size: 1.1rem; }
+  .dosen-info .title { color: var(--grey-light); font-size: 0.85rem; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 2rem;
+    flex-wrap: wrap; margin-bottom: 2.5rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue'; font-size: 2rem;
+    color: var(--orange-light); display: block;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--grey-light); letter-spacing: 2px; }
+
+  /* Module grid */
+  .section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Bebas Neue'; font-size: 2.5rem;
+    color: var(--white); letter-spacing: 3px;
+    margin-bottom: 0.5rem;
+  }
+  .section-title span { color: var(--orange); }
+  .section-line {
+    width: 60px; height: 3px; background: var(--orange);
+    margin-bottom: 2rem;
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .module-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--grey);
+    border-top: 3px solid var(--orange);
+    border-radius: 6px; padding: 1.2rem;
+    cursor: pointer; transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .module-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(245,124,0,0.05));
+    transition: opacity 0.3s;
+  }
+  .module-card:hover {
+    border-color: var(--orange);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(245,124,0,0.2);
+  }
+  .module-week {
+    font-family: 'Bebas Neue'; font-size: 0.9rem;
+    color: var(--orange); letter-spacing: 2px; margin-bottom: 0.3rem;
+  }
+  .module-title { font-weight: 600; font-size: 0.9rem; color: var(--white); line-height: 1.3; }
+
+  /* ── WEEK PAGE ── */
+  .week-hero {
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy));
+    border-bottom: 3px solid var(--orange);
+    padding: 3rem 2rem 2rem;
+  }
+  .week-num {
+    font-family: 'Bebas Neue'; font-size: 1rem;
+    color: var(--orange); letter-spacing: 4px;
+  }
+  .week-title {
+    font-family: 'Bebas Neue'; font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--white); letter-spacing: 2px;
+    margin: 0.3rem 0 1rem;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: transparent; border: 1px solid var(--orange);
+    color: var(--orange); padding: 6px 16px;
+    border-radius: 4px; cursor: pointer;
+    font-family: 'Barlow Condensed'; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: var(--orange); color: var(--navy); }
+
+  .week-content { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* Learning objectives */
+  .objective-box {
+    background: var(--navy-mid);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 1.5rem; margin-bottom: 2rem;
+  }
+  .box-title {
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: 1rem; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 0.8rem;
+  }
+  .objective-box ul { list-style: none; }
+  .objective-box li { padding: 0.3rem 0; padding-left: 1.2rem; position: relative; }
+  .objective-box li::before { content: '▸'; position: absolute; left: 0; color: var(--orange); }
+
+  /* Theory section */
+  .theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  @media(max-width:768px){ .theory-grid { grid-template-columns: 1fr; } }
+
+  .theory-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--grey);
+    border-radius: 8px; padding: 1.5rem;
+  }
+  .theory-card h4 {
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: 1rem; color: var(--orange-light);
+    letter-spacing: 1px; margin-bottom: 0.7rem;
+  }
+  .theory-card p { font-size: 0.9rem; line-height: 1.7; color: var(--text); }
+
+  /* Diagram sections */
+  .diagram-section { margin-bottom: 2rem; }
+  .diagram-section h3 {
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: 1.1rem; color: var(--white);
+    letter-spacing: 2px; margin-bottom: 1rem;
+    padding-bottom: 0.5rem; border-bottom: 1px solid var(--grey);
+  }
+  .diagram-container {
+    background: var(--navy-mid);
+    border: 1px solid var(--grey);
+    border-radius: 8px; padding: 1.5rem;
+    overflow-x: auto;
+  }
+  .diagram-container svg { max-width: 100%; }
+
+  /* Photo grid */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .photo-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--grey);
+    border-radius: 8px; overflow: hidden;
+  }
+  .photo-placeholder {
+    height: 140px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #0d2144, #1a3a6b);
+    border-bottom: 2px solid var(--orange);
+    padding: 1rem;
+    text-align: center;
+  }
+  .photo-placeholder .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .photo-placeholder .label {
+    font-size: 0.7rem; color: var(--grey-light);
+    letter-spacing: 1px; line-height: 1.3;
+  }
+  .photo-caption {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.75rem; color: var(--grey-light);
+    font-weight: 600;
+  }
+
+  /* Case study */
+  .case-study {
+    background: linear-gradient(135deg, rgba(245,124,0,0.08), rgba(10,22,40,0));
+    border: 1px solid rgba(245,124,0,0.3);
+    border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
+  }
+  .case-study h3 {
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    color: var(--orange-light); letter-spacing: 2px;
+    margin-bottom: 1rem; font-size: 1rem;
+  }
+  .ship-badge {
+    display: inline-block;
+    background: var(--orange); color: var(--navy);
+    padding: 2px 10px; border-radius: 3px;
+    font-size: 0.75rem; font-weight: 700;
+    margin-right: 0.5rem; margin-bottom: 0.5rem;
+  }
+
+  /* Discussion */
+  .discussion-box {
+    background: var(--navy-mid);
+    border: 1px solid var(--grey);
+    border-top: 3px solid var(--accent);
+    border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
+  }
+  .discussion-box h3 {
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    color: var(--accent); letter-spacing: 2px;
+    margin-bottom: 1rem; font-size: 1rem;
+  }
+  .q-item {
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px; padding: 0.8rem 1rem;
+    margin-bottom: 0.6rem;
+    border-left: 3px solid var(--orange);
+    font-size: 0.9rem;
+  }
+
+  /* Download button */
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--orange); color: var(--navy);
+    padding: 10px 24px; border-radius: 6px;
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: 1rem; letter-spacing: 1px;
+    border: none; cursor: pointer;
+    transition: all 0.2s; text-decoration: none;
+  }
+  .download-btn:hover { background: var(--orange-glow); transform: translateY(-2px); }
+
+  /* Week nav */
+  .week-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--grey);
+    max-width: 1100px; margin: 0 auto;
+  }
+  .prev-next-btn {
+    background: var(--navy-mid);
+    border: 1px solid var(--orange);
+    color: var(--orange); padding: 8px 20px;
+    border-radius: 4px; cursor: pointer;
+    font-family: 'Barlow Condensed'; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .prev-next-btn:hover { background: var(--orange); color: var(--navy); }
+  .prev-next-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy-mid);
+    border-top: 2px solid var(--orange);
+    padding: 2rem;
+    text-align: center;
+    margin-top: 3rem;
+  }
+  footer .footer-title {
+    font-family: 'Barlow Condensed'; font-weight: 700;
+    font-size: 1rem; color: var(--white);
+    letter-spacing: 2px; margin-bottom: 0.5rem;
+  }
+  footer .footer-dosen { color: var(--orange-light); font-weight: 600; }
+  footer .footer-sub { color: var(--grey-light); font-size: 0.85rem; }
+
+  /* Responsive nav */
+  @media(max-width:600px){
+    .nav-brand { font-size: 0.9rem; }
+    .week-menu { width: 100%; }
+  }
+
+  /* Animations */
+  .fade-in { animation: fadeUp 0.6s ease both; }
+
+  /* PID graphic */
+  .pid-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .pid-table th { background: var(--orange); color: var(--navy); padding: 8px 12px; font-family: 'Barlow Condensed'; font-weight: 700; letter-spacing: 1px; }
+  .pid-table td { padding: 8px 12px; border: 1px solid var(--grey); }
+  .pid-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-brand">⚓ SISTEM KONTROL PERMESINAN KAPAL</div>
+  <button class="nav-week-btn" onclick="toggleMenu()">☰ NAVIGASI MINGGU</button>
+</nav>
+
+<!-- WEEK DROPDOWN MENU -->
+<div class="week-menu" id="weekMenu">
+  <a class="week-link" onclick="showPage('home'); toggleMenu()">🏠</a>
+  <a class="week-link" onclick="showWeek(1); toggleMenu()">M1</a>
+  <a class="week-link" onclick="showWeek(2); toggleMenu()">M2</a>
+  <a class="week-link" onclick="showWeek(3); toggleMenu()">M3</a>
+  <a class="week-link" onclick="showWeek(4); toggleMenu()">M4</a>
+  <a class="week-link" onclick="showWeek(5); toggleMenu()">M5</a>
+  <a class="week-link" onclick="showWeek(6); toggleMenu()">M6</a>
+  <a class="week-link" onclick="showWeek(7); toggleMenu()">M7</a>
+  <a class="week-link" onclick="showWeek(8); toggleMenu()">M8</a>
+  <a class="week-link" onclick="showWeek(9); toggleMenu()">M9</a>
+  <a class="week-link" onclick="showWeek(10); toggleMenu()">M10</a>
+  <a class="week-link" onclick="showWeek(11); toggleMenu()">M11</a>
+  <a class="week-link" onclick="showWeek(12); toggleMenu()">M12</a>
+  <a class="week-link" onclick="showWeek(13); toggleMenu()">M13</a>
+  <a class="week-link" onclick="showWeek(14); toggleMenu()">M14</a>
+  <a class="week-link" onclick="showWeek(15); toggleMenu()">M15</a>
+  <a class="week-link" onclick="showWeek(16); toggleMenu()">M16</a>
+</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <!-- Engine room SVG background -->
+    <div class="engine-illustration">
+      <svg width="800" height="500" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main engine block -->
+        <rect x="200" y="150" width="400" height="250" rx="8" fill="#f57c00" opacity="0.3"/>
+        <rect x="220" y="170" width="360" height="210" rx="4" fill="none" stroke="#f57c00" stroke-width="2"/>
+        <!-- Cylinders -->
+        <rect x="240" y="180" width="50" height="130" rx="4" fill="#f57c00" opacity="0.4"/>
+        <rect x="305" y="180" width="50" height="130" rx="4" fill="#f57c00" opacity="0.4"/>
+        <rect x="370" y="180" width="50" height="130" rx="4" fill="#f57c00" opacity="0.4"/>
+        <rect x="435" y="180" width="50" height="130" rx="4" fill="#f57c00" opacity="0.4"/>
+        <rect x="500" y="180" width="50" height="130" rx="4" fill="#f57c00" opacity="0.4"/>
+        <!-- Pipelines -->
+        <path d="M100 200 L200 200 L200 280 L600 280 L600 200 L700 200" stroke="#00bcd4" stroke-width="3" fill="none"/>
+        <path d="M100 350 L200 350" stroke="#f57c00" stroke-width="4" fill="none"/>
+        <path d="M600 350 L700 350" stroke="#f57c00" stroke-width="4" fill="none"/>
+        <!-- Control panel -->
+        <rect x="50" y="100" width="100" height="120" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+        <circle cx="80" cy="130" r="12" fill="#f57c00" opacity="0.5"/>
+        <circle cx="120" cy="130" r="12" fill="#00bcd4" opacity="0.5"/>
+        <rect x="65" y="155" width="70" height="8" rx="2" fill="#f57c00" opacity="0.4"/>
+        <rect x="65" y="170" width="50" height="8" rx="2" fill="#f57c00" opacity="0.3"/>
+        <rect x="65" y="185" width="60" height="8" rx="2" fill="#f57c00" opacity="0.2"/>
+        <!-- Labels -->
+        <text x="400" y="470" font-family="sans-serif" font-size="18" fill="#f57c00" text-anchor="middle" opacity="0.5">ENGINE CONTROL ROOM</text>
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">⚓ Politeknik Pelayaran • 2026</div>
+      <h1>SISTEM KONTROL<br><span>PERMESINAN</span><br>KAPAL BESAR</h1>
+      <p class="hero-sub">PROGRAM STUDI TEKNIK PERMESINAN KAPAL</p>
+      <div class="dosen-card">
+        <div class="dosen-avatar">RS</div>
+        <div class="dosen-info">
+          <div class="name">Rafael Sukirno, CE</div>
+          <div class="title">Dosen Senior Sistem Kontrol Permesinan Kapal</div>
+        </div>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-item"><span class="stat-num">16</span><span class="stat-label">MINGGU</span></div>
+        <div class="stat-item"><span class="stat-num">160+</span><span class="stat-label">JAM BELAJAR</span></div>
+        <div class="stat-item"><span class="stat-num">10</span><span class="stat-label">TOPIK/MINGGU</span></div>
+        <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">JENIS KAPAL</span></div>
+      </div>
+      <button class="download-btn" onclick="downloadPage()">⬇ DOWNLOAD SILABUS</button>
+    </div>
+  </div>
+
+  <!-- Module Grid -->
+  <div class="section">
+    <h2 class="section-title">STRUKTUR <span>MODUL</span> PEMBELAJARAN</h2>
+    <div class="section-line"></div>
+    <div class="module-grid">
+      <div class="module-card" onclick="showWeek(1)"><div class="module-week">MINGGU 01</div><div class="module-title">Pengantar Sistem, Unit, Alur & Loop</div></div>
+      <div class="module-card" onclick="showWeek(2)"><div class="module-week">MINGGU 02</div><div class="module-title">Open Loop vs Closed Loop</div></div>
+      <div class="module-card" onclick="showWeek(3)"><div class="module-week">MINGGU 03</div><div class="module-title">Sensor Industri Marine</div></div>
+      <div class="module-card" onclick="showWeek(4)"><div class="module-week">MINGGU 04</div><div class="module-title">Actuator Mekanik (Hydraulic, Pneumatic, Electric)</div></div>
+      <div class="module-card" onclick="showWeek(5)"><div class="module-week">MINGGU 05</div><div class="module-title">PLC & IAS Kapal Besar</div></div>
+      <div class="module-card" onclick="showWeek(6)"><div class="module-week">MINGGU 06</div><div class="module-title">Main Engine Control System</div></div>
+      <div class="module-card" onclick="showWeek(7)"><div class="module-week">MINGGU 07</div><div class="module-title">Governor & Fuel Injection Control</div></div>
+      <div class="module-card" onclick="showWeek(8)"><div class="module-week">MINGGU 08</div><div class="module-title">Generator & Power Management System</div></div>
+      <div class="module-card" onclick="showWeek(9)"><div class="module-week">MINGGU 09</div><div class="module-title">Boiler & Steam Control</div></div>
+      <div class="module-card" onclick="showWeek(10)"><div class="module-week">MINGGU 10</div><div class="module-title">Fuel Oil Purifier Automation</div></div>
+      <div class="module-card" onclick="showWeek(11)"><div class="module-week">MINGGU 11</div><div class="module-title">Cooling System Control</div></div>
+      <div class="module-card" onclick="showWeek(12)"><div class="module-week">MINGGU 12</div><div class="module-title">Ballast & Cargo Control</div></div>
+      <div class="module-card" onclick="showWeek(13)"><div class="module-week">MINGGU 13</div><div class="module-title">Alarm & Interlock System</div></div>
+      <div class="module-card" onclick="showWeek(14)"><div class="module-week">MINGGU 14</div><div class="module-title">PID Tuning Sistem Marine</div></div>
+      <div class="module-card" onclick="showWeek(15)"><div class="module-week">MINGGU 15</div><div class="module-title">Integrasi Seluruh Sistem dalam IAS</div></div>
+      <div class="module-card" onclick="showWeek(16)"><div class="module-week">MINGGU 16</div><div class="module-title">Final Project — Desain Sistem Lengkap</div></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-title">WEBSITE PEMBELAJARAN SISTEM KONTROL PERMESINAN KAPAL BESAR</div>
+    <div class="footer-dosen">Rafael Sukirno, CE</div>
+    <div class="footer-sub">Dosen Senior Sistem Kontrol Permesinan Kapal | 2026</div>
+  </footer>
+</div>
+
+<!-- WEEK PAGES (generated by JS) -->
+<div class="page" id="week-page">
+  <div id="week-content"></div>
+</div>
+
+<script>
+const weekData = [
+  {
+    num: 1,
+    title: "Pengantar Sistem, Unit, Alur & Loop",
+    objectives: [
+      "Mahasiswa mampu mendefinisikan konsep Sistem dalam konteks permesinan kapal",
+      "Mahasiswa memahami perbedaan Unit, Alur, dan Loop dalam sistem kontrol",
+      "Mahasiswa dapat mengidentifikasi komponen steering gear kapal besar",
+      "Mahasiswa mengenal prinsip closed-loop autopilot"
+    ],
+    theory: [
+      { title: "Apa itu SISTEM?", text: "Sistem adalah kumpulan komponen yang saling terintegrasi dan berinteraksi untuk mencapai tujuan tertentu. Dalam permesinan kapal, sistem mencakup main engine, auxiliary machinery, dan semua subsistem pendukungnya yang bekerja secara koordinasi." },
+      { title: "Apa itu UNIT?", text: "Unit adalah bagian individual dalam sistem yang memiliki fungsi spesifik. Contoh: Pompa hidrolik adalah satu unit dalam sistem steering gear; Valve adalah unit dalam sistem bahan bakar; Sensor tekanan adalah unit dalam sistem monitoring." },
+      { title: "Apa itu ALUR?", text: "Alur adalah jalur perpindahan fluida (oli, udara, air, bahan bakar) atau sinyal (listrik, pneumatik, digital) dari satu titik ke titik lain dalam sistem. Alur menentukan arah dan urutan proses dalam sistem kontrol permesinan." },
+      { title: "Apa itu LOOP?", text: "Loop adalah mekanisme kontrol yang memiliki feedback — output sistem diukur dan dibandingkan dengan setpoint, kemudian perbedaannya (error) digunakan untuk mengoreksi sistem. Contoh: Autopilot kapal mengukur heading actual vs heading setpoint." }
+    ],
+    diagramBlock: `<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f57c00"/></marker></defs>
+      <rect x="10" y="80" width="110" height="50" rx="6" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="65" y="100" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">BRIDGE</text>
+      <text x="65" y="116" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">(Autopilot)</text>
+      <line x1="120" y1="105" x2="165" y2="105" stroke="#f57c00" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="165" y="80" width="110" height="50" rx="6" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="220" y="100" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">CONTROLLER</text>
+      <text x="220" y="116" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">(Hydraulic Unit)</text>
+      <line x1="275" y1="105" x2="320" y2="105" stroke="#f57c00" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="320" y="80" width="110" height="50" rx="6" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="375" y="100" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">ACTUATOR</text>
+      <text x="375" y="116" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">(Ram Cylinder)</text>
+      <line x1="430" y1="105" x2="475" y2="105" stroke="#f57c00" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="475" y="80" width="110" height="50" rx="6" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="530" y="100" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">RUDDER</text>
+      <text x="530" y="116" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">(Plant)</text>
+      <path d="M530 130 L530 170 L220 170 L220 130" stroke="#00bcd4" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <text x="375" y="185" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#00bcd4" text-anchor="middle">FEEDBACK — Rudder Angle Sensor</text>
+    </svg>`,
+    diagramFlow: `<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00bcd4"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">DIAGRAM ALUR OLI — RAM-TYPE STEERING GEAR</text>
+      <rect x="10" y="40" width="100" height="40" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="60" y="64" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">RESERVOIR</text>
+      <line x1="110" y1="60" x2="155" y2="60" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="155" y="40" width="100" height="40" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="205" y="58" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HYDRAULIC</text>
+      <text x="205" y="72" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PUMP</text>
+      <line x1="255" y1="60" x2="300" y2="60" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="300" y="40" width="100" height="40" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="1.5"/>
+      <text x="350" y="58" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SOLENOID</text>
+      <text x="350" y="72" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">VALVE</text>
+      <line x1="400" y1="60" x2="445" y2="60" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="445" y="40" width="100" height="40" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="495" y="58" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">RAM</text>
+      <text x="495" y="72" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">CYLINDER</text>
+      <line x1="545" y1="60" x2="590" y2="60" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="590" y="40" width="100" height="40" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="640" y="64" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">RUDDER</text>
+      <text x="10" y="120" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f57c00">Tekanan: 150–250 bar | Fluida: Hydraulic Oil ISO 46</text>
+      <text x="10" y="140" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0">Return line: oli kembali ke reservoir setelah aktuasi</text>
+    </svg>`,
+    diagramLoop: `<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ffb74d"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">CLOSED LOOP — AUTOPILOT CONTROL</text>
+      <circle cx="60" cy="110" r="30" fill="none" stroke="#ffb74d" stroke-width="2"/>
+      <text x="60" y="106" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SET</text>
+      <text x="60" y="120" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">POINT</text>
+      <line x1="90" y1="110" x2="140" y2="110" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="140" y="85" width="100" height="50" rx="4" fill="#0d2144" stroke="#ffb74d" stroke-width="2"/>
+      <text x="190" y="108" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">PID</text>
+      <text x="190" y="124" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">CONTROLLER</text>
+      <line x1="240" y1="110" x2="290" y2="110" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="290" y="85" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="340" y="108" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">HYDRAULIC</text>
+      <text x="340" y="124" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">ACTUATOR</text>
+      <line x1="390" y1="110" x2="440" y2="110" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="440" y="85" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="490" y="108" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">RUDDER</text>
+      <text x="490" y="124" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">(PLANT)</text>
+      <line x1="540" y1="110" x2="590" y2="110" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="590" y="85" width="100" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="2"/>
+      <text x="640" y="108" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">SENSOR</text>
+      <text x="640" y="124" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Gyro/GNSS</text>
+      <path d="M640 135 L640 175 L60 175 L60 140" stroke="#00bcd4" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arr3)"/>
+      <text x="350" y="190" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#00bcd4" text-anchor="middle">FEEDBACK SIGNAL — Heading Measurement</text>
+    </svg>`,
+    photos: [
+      { icon: "⚙️", label: "HYDRAULIC PISTON PUMP\nBosch Rexroth / Kawasaki\nVariabel Displacement" },
+      { icon: "🔧", label: "HYDRAULIC CYLINDER\nSteering Gear Ram Type\n4-Ram / 2-Ram Configuration" },
+      { icon: "🔌", label: "SOLENOID VALVE\nManifold Assembly\nDirectional Control" },
+      { icon: "📡", label: "RUDDER ANGLE\nSENSOR (RAS)\nPotentiometer Type" }
+    ],
+    actuator: "Pada steering gear kapal besar, actuator mekanik utama adalah Ram Hydraulic Cylinder berdiameter 200–600mm dengan stroke hingga 1200mm, beroperasi pada tekanan 150–250 bar. Sistem ini menggerakkan tiller arm yang terhubung langsung ke batang kemudi (rudder stock). Piston pump dengan displacement variabel mengatur flow rate secara proporsional terhadap perintah kemudi dari bridge.",
+    connection: "Controller (autopilot atau helm) mengirim sinyal listrik 4–20 mA atau digital NMEA ke proportional solenoid valve. Valve mengatur aliran oli dari pompa ke ram cylinder. Feedback dari Rudder Angle Sensor (RAS) dikirim balik ke controller untuk menutup loop kontrol. Sistem ini terhubung ke IAS (Integrated Automation System) untuk monitoring dan alarm.",
+    caseStudy: "VLCC CRUDE OIL TANKER (300,000 DWT): Kapal ini menggunakan 4-ram steering gear dengan kapasitas torsi 1,200 kNm. Sistem menggunakan 2 pompa independen (main + standby) berkapasitas masing-masing 250 L/min. Autopilot Kongsberg Maritime dihubungkan melalui gyrocompass dan GNSS dual-antenna untuk presisi kemudi ±0.1° pada kecepatan 14 knots di laut terbuka.",
+    discussion: [
+      "Jelaskan perbedaan fungsi antara Controller dan Actuator dalam sistem steering gear kapal!",
+      "Mengapa sistem steering gear kapal besar menggunakan prinsip Closed Loop dan bukan Open Loop?",
+      "Hitunglah berapa kali Rudder Angle Sensor mengirim feedback per detik jika sistem beroperasi pada frekuensi 50 Hz!",
+      "Diskusikan konsekuensi kegagalan Rudder Angle Sensor terhadap keselamatan kapal."
+    ]
+  },
+  {
+    num: 2,
+    title: "Open Loop vs Closed Loop",
+    objectives: [
+      "Mahasiswa mampu membedakan sistem Open Loop dan Closed Loop",
+      "Mahasiswa dapat mengidentifikasi kapan digunakan masing-masing jenis kontrol",
+      "Mahasiswa memahami loop kontrol tekanan boiler",
+      "Mahasiswa mengenal komponen temperature dan pressure controller marine"
+    ],
+    theory: [
+      { title: "OPEN LOOP CONTROL", text: "Sistem Open Loop adalah sistem kontrol tanpa feedback. Output tidak mempengaruhi input kontrol. Keuntungan: sederhana, murah, respon cepat. Kelemahan: tidak dapat mengoreksi gangguan/disturbance secara otomatis. Contoh pada kapal: pompa transfer bahan bakar timer-based." },
+      { title: "CLOSED LOOP CONTROL", text: "Sistem Closed Loop menggunakan feedback dari output untuk membandingkan dengan setpoint. Error (selisih setpoint vs actual) digunakan controller untuk mengkoreksi. Contoh: level control ballast tank menggunakan sensor ultrasonik dan control valve otomatis." },
+      { title: "KELEBIHAN CLOSED LOOP", text: "Closed Loop lebih akurat dan robust terhadap disturbance. Mampu self-correcting: jika level ballast naik karena kebocoran kecil, controller otomatis menutup inlet valve. Digunakan pada sistem kritis kapal: steering, engine speed, boiler pressure." },
+      { title: "DISTURBANCE & NOISE", text: "Disturbance adalah gangguan eksternal (gelombang, variasi beban) yang mempengaruhi output sistem. Dalam closed loop, disturbance dikompensasi oleh feedback. Noise sensor harus difilter agar tidak menyebabkan control action yang tidak perlu (hunting)." }
+    ],
+    diagramBlock: `<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f57c00"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">OPEN LOOP — POMPA TRANSFER BAHAN BAKAR</text>
+      <rect x="10" y="40" width="110" height="50" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="65" y="63" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle">TIMER/</text>
+      <text x="65" y="78" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle">SCHEDULE</text>
+      <line x1="120" y1="65" x2="165" y2="65" stroke="#8a9bb0" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="165" y="40" width="120" height="50" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="225" y="63" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle">PUMP MOTOR</text>
+      <text x="225" y="78" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle">STARTER</text>
+      <line x1="285" y1="65" x2="330" y2="65" stroke="#8a9bb0" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="330" y="40" width="110" height="50" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="385" y="68" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle">FUEL TANK</text>
+      <text x="10" y="120" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0">Tidak ada sensor level — pump berjalan selama waktu yang ditentukan (misal 30 menit)</text>
+      <text x="10" y="150" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">CLOSED LOOP — BALLAST TANK LEVEL CONTROL</text>
+      <circle cx="60" cy="200" r="22" fill="none" stroke="#f57c00" stroke-width="2"/>
+      <text x="60" y="204" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SP: 80%</text>
+      <line x1="82" y1="200" x2="110" y2="200" stroke="#f57c00" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="110" y="180" width="90" height="40" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="155" y="204" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PLC CTRL</text>
+      <line x1="200" y1="200" x2="230" y2="200" stroke="#f57c00" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="230" y="180" width="90" height="40" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="275" y="204" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">VALVE</text>
+      <line x1="320" y1="200" x2="350" y2="200" stroke="#f57c00" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="350" y="180" width="90" height="40" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="395" y="204" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">BALLAST TANK</text>
+      <line x1="440" y1="200" x2="470" y2="200" stroke="#00bcd4" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <rect x="470" y="180" width="90" height="40" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="515" y="204" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SENSOR LVDT</text>
+      <path d="M515 220 L515 240 L60 240 L60 222" stroke="#00bcd4" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+    </svg>`,
+    diagramFlow: `<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00bcd4"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">LOOP KONTROL TEKANAN BOILER</text>
+      <rect x="10" y="40" width="100" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="60" y="63" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SET PRESSURE</text>
+      <text x="60" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">7 bar</text>
+      <line x1="110" y1="65" x2="150" y2="65" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr5)"/>
+      <rect x="150" y="40" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="200" y="60" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">BURNER</text>
+      <text x="200" y="76" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">CONTROLLER</text>
+      <line x1="250" y1="65" x2="290" y2="65" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr5)"/>
+      <rect x="290" y="40" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="340" y="63" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">FUEL VALVE</text>
+      <text x="340" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Modulating</text>
+      <line x1="390" y1="65" x2="430" y2="65" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr5)"/>
+      <rect x="430" y="40" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="480" y="63" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">BOILER</text>
+      <text x="480" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Steam Drum</text>
+      <line x1="530" y1="65" x2="570" y2="65" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr5)"/>
+      <rect x="570" y="40" width="110" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="625" y="63" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PRESSURE</text>
+      <text x="625" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">TRANSMITTER</text>
+      <path d="M625 90 L625 140 L200 140 L200 90" stroke="#00bcd4" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <text x="412" y="158" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#00bcd4" text-anchor="middle">4–20 mA FEEDBACK SIGNAL</text>
+    </svg>`,
+    diagramLoop: `<svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <text x="350" y="75" font-family="Barlow Condensed,sans-serif" font-size="16" fill="#8a9bb0" text-anchor="middle">Loop diagrams embedded in Block and Flow diagrams above</text>
+    </svg>`,
+    photos: [
+      { icon: "🌡️", label: "TEMPERATURE CONTROLLER\nIndustri Marine\nAnalog/Digital" },
+      { icon: "⏱️", label: "PRESSURE SWITCH\nMarine Grade\nSS316 Wetted Parts" }
+    ],
+    actuator: "Dalam sistem Open Loop pompa transfer, motor pompa adalah actuator yang beroperasi berdasarkan sinyal on/off dari timer PLC tanpa koreksi apapun. Dalam Closed Loop boiler, actuator adalah modulating fuel valve yang menerima sinyal 4-20 mA dari controller dan membuka/menutup secara proporsional (0-100%) sesuai kebutuhan panas.",
+    connection: "Pressure transmitter boiler mengirim sinyal 4-20 mA ke pressure controller. Controller membandingkan dengan setpoint 7 bar dan menghitung error. Sinyal output controller dikirim ke modulating fuel valve untuk mengatur flow bahan bakar ke burner. Seluruh data loop ditampilkan di panel IAS engine room dan bridge.",
+    caseStudy: "LNG CARRIER 'ARCTIC PIONEER': Sistem boiler composite menggunakan Closed Loop pressure control dengan PID. Saat beban steam berubah (misal mesin bantu berhenti), controller boiler otomatis mengurangi pembukaan fuel valve dalam 2-3 detik untuk mencegah pressure overshoot. Sistem dilengkapi safety valve yang membuka pada 8.5 bar dan ESD (Emergency Shutdown) pada 9 bar.",
+    discussion: [
+      "Berikan 3 contoh sistem Open Loop dan 3 sistem Closed Loop yang ada di kapal besar!",
+      "Mengapa kontrol level ballast tank menggunakan Closed Loop dan bukan Open Loop?",
+      "Jelaskan apa yang terjadi pada tekanan boiler jika sensor pressure transmitter rusak dalam sistem Closed Loop!",
+      "Hitung error signal jika setpoint boiler 7 bar dan actual pressure 6.5 bar."
+    ]
+  },
+  {
+    num: 3,
+    title: "Sensor Industri Marine",
+    objectives: [
+      "Mahasiswa memahami standar sinyal sensor industri 4-20 mA dan HART",
+      "Mahasiswa dapat menjelaskan wiring sensor ke PLC/IAS",
+      "Mahasiswa mengenal berbagai jenis sensor yang digunakan di kapal besar",
+      "Mahasiswa memahami loop kontrol dengan sensor ultrasonik untuk level control"
+    ],
+    theory: [
+      { title: "STANDAR SINYAL 4-20 mA", text: "Sinyal 4-20 mA adalah standar industri untuk transmisi sinyal analog jarak jauh. 4 mA = 0% (proses minimum), 20 mA = 100% (proses maksimum). Keunggulan: tahan noise, dapat mendeteksi kabel putus (sinyal < 4 mA = alarm). Digunakan untuk semua transmitter pressure, temperature, level, dan flow di kapal." },
+      { title: "PRESSURE TRANSMITTER", text: "Mengukur tekanan gauge, absolut, atau diferensial. Menggunakan sensor piezoelectric atau capacitive. Range: 0-1 bar hingga 0-600 bar. Ketelitian ±0.1% full scale. Di kapal digunakan pada: sistem bahan bakar, pelumas, pendingin, ballast, hidrolik steering gear." },
+      { title: "RTD (Resistance Temperature Detector)", text: "Sensor temperatur paling akurat untuk aplikasi industri. PT100/PT1000: resistansi meningkat linear terhadap suhu. Range: -200°C hingga +850°C. Dipasang dalam thermowell untuk perlindungan dari fluida proses. Digunakan pada: suhu air pendingin mesin, suhu exhaust, suhu bahan bakar." },
+      { title: "FLOW METER TURBINE", text: "Mengukur laju aliran fluida. Prinsip: cairan memutar impeller, kecepatan putar proporsional dengan flow rate. Output: pulse per liter atau sinyal 4-20 mA. Digunakan pada: flow bahan bakar utama, flow oli pelumas, flow air ballast. Akurasi ±0.5% untuk clean fluids." }
+    ],
+    diagramBlock: `<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f57c00"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">WIRING 4-20 mA KE PLC</text>
+      <rect x="10" y="40" width="100" height="70" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="2"/>
+      <text x="60" y="65" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SENSOR /</text>
+      <text x="60" y="80" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">TRANSMITTER</text>
+      <text x="60" y="98" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f57c00" text-anchor="middle">4–20 mA Output</text>
+      <line x1="110" y1="75" x2="195" y2="75" stroke="#f57c00" stroke-width="2" marker-end="url(#arr6)"/>
+      <text x="152" y="68" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8a9bb0" text-anchor="middle">2-wire / 4-wire</text>
+      <rect x="195" y="40" width="120" height="70" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="255" y="65" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">MARSHALLING</text>
+      <text x="255" y="80" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">CABINET</text>
+      <text x="255" y="98" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8a9bb0" text-anchor="middle">Terminal Block</text>
+      <line x1="315" y1="75" x2="375" y2="75" stroke="#f57c00" stroke-width="2" marker-end="url(#arr6)"/>
+      <rect x="375" y="40" width="120" height="70" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="435" y="65" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PLC AI MODULE</text>
+      <text x="435" y="80" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">(Analog Input)</text>
+      <text x="435" y="98" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8a9bb0" text-anchor="middle">12/16 bit ADC</text>
+      <line x1="495" y1="75" x2="555" y2="75" stroke="#f57c00" stroke-width="2" marker-end="url(#arr6)"/>
+      <rect x="555" y="40" width="130" height="70" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="2"/>
+      <text x="620" y="65" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">IAS / SCADA</text>
+      <text x="620" y="80" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HMI DISPLAY</text>
+      <text x="350" y="160" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Supply Voltage: 24 VDC | Max loop resistance: 600 Ω | Cable: shielded twisted pair</text>
+    </svg>`,
+    diagramFlow: `<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr7" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00bcd4"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">ALUR DATA SENSOR → PLC → IAS</text>
+      <rect x="10" y="40" width="90" height="60" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="55" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">FIELD SENSOR</text>
+      <line x1="100" y1="70" x2="135" y2="70" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr7)"/>
+      <rect x="135" y="40" width="90" height="60" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="180" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PLC I/O</text>
+      <line x1="225" y1="70" x2="260" y2="70" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr7)"/>
+      <rect x="260" y="40" width="90" height="60" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="305" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PLC CPU</text>
+      <line x1="350" y1="70" x2="385" y2="70" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr7)"/>
+      <rect x="385" y="40" width="90" height="60" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="430" y="70" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">ETHERNET</text>
+      <text x="430" y="84" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SWITCH</text>
+      <line x1="475" y1="70" x2="510" y2="70" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr7)"/>
+      <rect x="510" y="40" width="90" height="60" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="555" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">IAS SERVER</text>
+      <line x1="600" y1="70" x2="635" y2="70" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr7)"/>
+      <rect x="635" y="40" width="55" height="60" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="662" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HMI</text>
+      <text x="350" y="140" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Protocol: Modbus RTU / Profibus DP / Ethernet TCP-IP | Update rate: 100ms–1s</text>
+    </svg>`,
+    diagramLoop: `<svg viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ffb74d"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">LOOP KONTROL LEVEL ULTRASONIK — BALLAST TANK</text>
+      <circle cx="55" cy="100" r="28" fill="none" stroke="#ffb74d" stroke-width="2"/>
+      <text x="55" y="96" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SP</text>
+      <text x="55" y="110" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f57c00" text-anchor="middle">80%</text>
+      <line x1="83" y1="100" x2="115" y2="100" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr8)"/>
+      <rect x="115" y="80" width="100" height="40" rx="4" fill="#0d2144" stroke="#ffb74d" stroke-width="2"/>
+      <text x="165" y="104" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PID CTRL</text>
+      <line x1="215" y1="100" x2="250" y2="100" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr8)"/>
+      <rect x="250" y="80" width="100" height="40" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="300" y="97" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">MOTORIZED</text>
+      <text x="300" y="111" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">BALL VALVE</text>
+      <line x1="350" y1="100" x2="385" y2="100" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr8)"/>
+      <rect x="385" y="80" width="100" height="40" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="435" y="97" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">BALLAST</text>
+      <text x="435" y="111" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">TANK</text>
+      <line x1="485" y1="100" x2="520" y2="100" stroke="#00bcd4" stroke-width="1.5" marker-end="url(#arr8)"/>
+      <rect x="520" y="80" width="110" height="40" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="575" y="97" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">ULTRASONIC</text>
+      <text x="575" y="111" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">LEVEL SENSOR</text>
+      <path d="M575 120 L575 150 L165 150 L165 120" stroke="#00bcd4" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <text x="370" y="165" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#00bcd4" text-anchor="middle">4–20 mA FEEDBACK</text>
+    </svg>`,
+    photos: [
+      { icon: "📊", label: "PRESSURE TRANSMITTER\nRosemount 3051 / Yokogawa EJA\n4-20mA + HART Protocol" },
+      { icon: "🌡️", label: "RTD THERMOWELL\nPT100 Class A\nSS316L, Flange Mount" },
+      { icon: "🌊", label: "FLOW METER TURBINE\nMarine Grade, DN50-DN200\nEx-proof, IP67" }
+    ],
+    actuator: "Sensor level ultrasonik mengirim gelombang suara ke permukaan fluida dan mengukur waktu pantulan (Time-of-Flight). Resolusi 1mm, range 0.3-20m. Sensor ini tidak kontak dengan fluida (non-contact), sehingga ideal untuk ballast water yang korosif. Output 4-20 mA dikirim ke PLC untuk menggerakkan motorized valve (actuator) secara proporsional.",
+    connection: "Semua sensor field di kapal dihubungkan ke junction box melalui kabel shielded twisted pair (STP) untuk mengurangi noise EMI. Dari junction box, sinyal diteruskan ke PLC I/O module di engine control room. PLC memproses data dan mengirim ke IAS server melalui Ethernet. Operator di bridge atau ECR dapat memantau semua parameter sensor secara real-time di layar HMI.",
+    caseStudy: "CAPESIZE BULK CARRIER 180,000 DWT: Kapal ini memiliki 28 ballast tank dengan total kapasitas 85,000 ton air. Setiap tank dilengkapi ultrasonic level transmitter Endress+Hauser FMU90. Sistem IAS Kongsberg K-Chief 600 menampilkan level semua tank secara grafis 3D. Remote valve control dari bridge memungkinkan ballasting/deballasting tanpa personel di cargo hold.",
+    discussion: [
+      "Mengapa sinyal 4-20 mA dipilih dibanding 0-10V untuk transmisi jarak jauh di kapal?",
+      "Jelaskan cara mendeteksi kerusakan sensor (cable break) menggunakan sinyal 4-20 mA!",
+      "Hitung nilai tekanan aktual jika sensor mengirim sinyal 12 mA, range sensor 0-100 bar!",
+      "Sebutkan 5 jenis sensor yang wajib ada di sistem monitoring main engine kapal besar!"
+    ]
+  },
+  {
+    num: 4,
+    title: "Actuator Mekanik (Hydraulic, Pneumatic, Electric)",
+    objectives: [
+      "Mahasiswa memahami prinsip kerja actuator hidrolik, pneumatik, dan elektrik",
+      "Mahasiswa dapat membedakan kapan menggunakan masing-masing jenis actuator",
+      "Mahasiswa memahami sistem kontrol posisi dengan LVDT",
+      "Mahasiswa mengenal komponen actuator nyata dari industri marine"
+    ],
+    theory: [
+      { title: "HYDRAULIC ACTUATOR", text: "Menggunakan tekanan oli untuk menghasilkan gaya linear (silinder) atau torsi (motor hidrolik). Tekanan operasi: 70-350 bar. Keunggulan: gaya besar, kontrol presisi, tidak ada percikan api. Digunakan pada: steering gear, hatch cover, bow thruster, cargo crane. Kelemahannya: perlu maintenance intensif, resiko kebocoran oli." },
+      { title: "PNEUMATIC ACTUATOR", text: "Menggunakan tekanan udara (5-7 bar) untuk menggerakkan actuator. Lebih murah dan sederhana dari hidrolik. Keunggulan: bersih, aman di area berbahaya (ATEX certified). Digunakan pada: valve actuator di sistem bahan bakar, quick-closing valves, damper kontrol udara. Kelemahannya: tidak bisa menahan beban statis lama (compressible)." },
+      { title: "ELECTRIC ACTUATOR (SERVO MOTOR)", text: "Motor AC/DC dengan gearbox untuk menggerakkan valve, damper, atau mekanisme kontrol. Keunggulan: presisi tinggi, mudah diintegrasikan dengan PLC, tidak perlu fluida. Range torsi: 10 Nm hingga 10,000 Nm. Digunakan pada: fuel injection rack, AVR generator, modulating valve kontrol." },
+      { title: "LVDT (Linear Variable Differential Transformer)", text: "Sensor posisi linear yang mengukur perpindahan inti besi di antara kumparan. Output: tegangan AC proporsional dengan posisi (-10V hingga +10V). Resolusi <1 µm. Sangat robust (tidak ada bagian yang bersentuhan). Digunakan sebagai feedback posisi pada servo hydraulic system: fuel rack position, cylinder posisi." }
+    ],
+    diagramBlock: `<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr9" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f57c00"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">SISTEM HIDROLIK — HATCH COVER KAPAL BULK CARRIER</text>
+      <rect x="10" y="50" width="90" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="55" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HPU (Hydraulic\nPower Unit)</text>
+      <line x1="100" y1="75" x2="135" y2="75" stroke="#f57c00" stroke-width="2.5" marker-end="url(#arr9)"/>
+      <rect x="135" y="50" width="90" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="180" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">DIRECTIONAL</text>
+      <text x="180" y="87" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">CONTROL VALVE</text>
+      <line x1="225" y1="75" x2="260" y2="75" stroke="#f57c00" stroke-width="2.5" marker-end="url(#arr9)"/>
+      <rect x="260" y="50" width="90" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="305" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HYDRAULIC</text>
+      <text x="305" y="87" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">CYLINDER</text>
+      <line x1="350" y1="75" x2="385" y2="75" stroke="#f57c00" stroke-width="2.5" marker-end="url(#arr9)"/>
+      <rect x="385" y="50" width="90" height="50" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="430" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HATCH</text>
+      <text x="430" y="87" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">COVER</text>
+      <text x="10" y="140" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0">Tekanan max: 200 bar | Silinder stroke: 800mm | Kapasitas angkat: 40 ton per panel</text>
+    </svg>`,
+    diagramFlow: `<svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr10" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00bcd4"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">ALUR UDARA SISTEM PNEUMATIK — QUICK CLOSING VALVE</text>
+      <rect x="10" y="50" width="80" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="50" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">AIR SUPPLY\n7 bar</text>
+      <line x1="90" y1="75" x2="120" y2="75" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr10)"/>
+      <rect x="120" y="50" width="80" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="160" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">FRL UNIT\n(Filter-Reg-Lub)</text>
+      <line x1="200" y1="75" x2="230" y2="75" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr10)"/>
+      <rect x="230" y="50" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="280" y="73" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SOLENOID</text>
+      <text x="280" y="87" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">VALVE 5/2</text>
+      <line x1="330" y1="75" x2="360" y2="75" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr10)"/>
+      <rect x="360" y="50" width="100" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="410" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">PNEUMATIC\nACTUATOR</text>
+      <line x1="460" y1="75" x2="490" y2="75" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr10)"/>
+      <rect x="490" y="50" width="100" height="50" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="540" y="78" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">QCV (Quick\nClose Valve)</text>
+      <text x="10" y="130" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0">Spring-return: valve menutup otomatis saat udara/sinyal listrik hilang (Fail-Safe)</text>
+    </svg>`,
+    diagramLoop: `<svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr11" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ffb74d"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">LOOP POSISI SILINDER DENGAN LVDT</text>
+      <circle cx="55" cy="95" r="25" fill="none" stroke="#ffb74d" stroke-width="2"/>
+      <text x="55" y="91" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SETPOINT</text>
+      <text x="55" y="105" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f57c00" text-anchor="middle">POSISI</text>
+      <line x1="80" y1="95" x2="115" y2="95" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr11)"/>
+      <rect x="115" y="78" width="90" height="35" rx="4" fill="#0d2144" stroke="#ffb74d" stroke-width="2"/>
+      <text x="160" y="99" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SERVO CTRL</text>
+      <line x1="205" y1="95" x2="240" y2="95" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr11)"/>
+      <rect x="240" y="78" width="100" height="35" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="290" y="99" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">SERVO VALVE</text>
+      <line x1="340" y1="95" x2="375" y2="95" stroke="#ffb74d" stroke-width="2" marker-end="url(#arr11)"/>
+      <rect x="375" y="78" width="100" height="35" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="425" y="92" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HYDRAULIC</text>
+      <text x="425" y="106" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">CYLINDER</text>
+      <line x1="475" y1="95" x2="510" y2="95" stroke="#00bcd4" stroke-width="1.5" marker-end="url(#arr11)"/>
+      <rect x="510" y="78" width="80" height="35" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="550" y="99" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">LVDT</text>
+      <path d="M550 113 L550 140 L160 140 L160 113" stroke="#00bcd4" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <text x="355" y="155" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#00bcd4" text-anchor="middle">POSITION FEEDBACK ±10V DC</text>
+    </svg>`,
+    photos: [
+      { icon: "🔩", label: "HYDRAULIC CYLINDER\nBore 200mm, Stroke 800mm\nPressure 250 bar" },
+      { icon: "💨", label: "PNEUMATIC VALVE\nACTUATOR\nDouble-acting, Fail-safe" },
+      { icon: "⚡", label: "SERVO MOTOR INDUSTRI\nABB / Siemens\nEncoder Feedback" }
+    ],
+    actuator: "Hatch cover kapal bulk carrier menggunakan hydraulic cylinder dengan bore diameter 100-200mm dan stroke 600-1200mm. Tekanan operasi 150-200 bar menghasilkan gaya push/pull hingga 600 kN. Sistem ini didesain untuk mengoperasikan cover panel baja setebal 25-40mm yang beratnya 20-60 ton. Setiap panel memiliki 2-4 silinder yang beroperasi secara sinkron dikontrol oleh proportional valve.",
+    connection: "Servo proportional valve menerima sinyal ±10mA dari servo amplifier (controller). Valve mengatur arah dan laju aliran oli ke silinder. LVDT mengukur posisi piston rod dengan resolusi 0.1mm dan mengirim sinyal balik ke servo amplifier untuk menutup loop. Kontrol PLC mengoordinasikan semua silinder agar bergerak sinkron mencegah distorsi panel hatch cover.",
+    caseStudy: "CAPESIZE BULK CARRIER — HATCH COVER HYDRAULIC SYSTEM: Kapal dengan 9 cargo hold menggunakan 18 hatch cover panel baja. Setiap panel memiliki 4 hydraulic cylinder Parker Hannifin RA2 series, berdiameter 125mm, stroke 900mm. HPU tunggal 45 kW menyuplai semua silinder. Waktu buka/tutup panel: 4-6 menit. Sistem dilengkapi pressure relief valve dan emergency hand pump.",
+    discussion: [
+      "Bandingkan keunggulan dan kelemahan actuator hidrolik vs pneumatik untuk aplikasi hatch cover!",
+      "Mengapa LVDT dipilih sebagai sensor posisi pada servo hydraulic system dibanding potentiometer biasa?",
+      "Jelaskan prinsip kerja Fail-Safe pada pneumatic actuator quick-closing valve!",
+      "Hitunglah gaya yang dihasilkan silinder hidrolik dengan bore 100mm dan tekanan 200 bar!"
+    ]
+  },
+  {
+    num: 5,
+    title: "PLC & IAS Kapal Besar",
+    objectives: [
+      "Mahasiswa memahami arsitektur PLC dan IAS modern pada kapal besar",
+      "Mahasiswa dapat menjelaskan alur data dari sensor ke HMI",
+      "Mahasiswa mengenal merk dan sistem IAS yang digunakan di industri pelayaran",
+      "Mahasiswa memahami loop kontrol berbasis PLC"
+    ],
+    theory: [
+      { title: "PLC (Programmable Logic Controller)", text: "PLC adalah komputer industri yang dirancang untuk mengontrol proses otomatis di lingkungan berat (getaran, kelembaban, suhu ekstrem). Komponen: CPU, I/O modules (digital/analog), power supply, communication modules. Merk utama di kapal: Siemens S7-300/400, Rockwell ControlLogix, Schneider Modicon." },
+      { title: "IAS (Integrated Automation System)", text: "IAS adalah sistem terintegrasi yang menggabungkan monitoring, alarm, dan kontrol seluruh sistem kapal dalam satu platform. Menggantikan panel alarm individual tradisional. Merk terkemuka: Kongsberg Maritime (K-Chief), Wartsila (NACOS), Rolls-Royce (IAS), Transas. Semua data sensor ditampilkan dalam satu layar grafis interaktif." },
+      { title: "REDUNDANSI SISTEM", text: "Kapal besar wajib memiliki redundansi: dual PLC (main + backup), dual network (ring topology), UPS untuk supply listrik kontrol. Class societies (DNV, Lloyd's, BV) mewajibkan test redundansi sebelum kapal beroperasi. Jika PLC utama gagal, backup mengambil alih dalam <100ms tanpa interupsi proses." },
+      { title: "FIELDBUS & NETWORKING", text: "Data sensor dikirim via Profibus DP, Modbus RTU (level field) atau Profinet/Modbus TCP (level supervisor). Network topology: Ring (redundant) atau star. Bandwidth minimal 100 Mbps untuk IAS. Semua data dilog ke database historian untuk analisis dan regulatory reporting (Class surveyors)." }
+    ],
+    diagramBlock: `<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr12" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f57c00"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">ARSITEKTUR IAS KAPAL MODERN</text>
+      <rect x="10" y="140" width="80" height="60" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="50" y="165" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">FIELD</text>
+      <text x="50" y="178" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SENSORS</text>
+      <text x="50" y="191" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8a9bb0" text-anchor="middle">4-20mA</text>
+      <rect x="110" y="140" width="80" height="60" rx="4" fill="#0d2144" stroke="#8a9bb0" stroke-width="1.5"/>
+      <text x="150" y="165" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">ACTUATORS</text>
+      <line x1="90" y1="170" x2="205" y2="100" stroke="#8a9bb0" stroke-width="1.5" marker-end="url(#arr12)"/>
+      <line x1="150" y1="140" x2="220" y2="105" stroke="#8a9bb0" stroke-width="1.5" marker-end="url(#arr12)"/>
+      <rect x="205" y="70" width="130" height="60" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="270" y="95" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">PLC ENGINE</text>
+      <text x="270" y="112" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Siemens S7-400 HA</text>
+      <line x1="335" y1="100" x2="380" y2="100" stroke="#f57c00" stroke-width="2" marker-end="url(#arr12)"/>
+      <rect x="380" y="70" width="130" height="60" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="2"/>
+      <text x="445" y="92" font-family="Barlow Condensed,sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="700">IAS SERVER</text>
+      <text x="445" y="107" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Redundant Pair</text>
+      <text x="445" y="120" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f57c00" text-anchor="middle">Ethernet 1Gbps Ring</text>
+      <line x1="510" y1="100" x2="555" y2="60" stroke="#00bcd4" stroke-width="1.5" marker-end="url(#arr12)"/>
+      <line x1="510" y1="100" x2="555" y2="130" stroke="#00bcd4" stroke-width="1.5" marker-end="url(#arr12)"/>
+      <rect x="555" y="35" width="130" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="620" y="58" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HMI BRIDGE</text>
+      <text x="620" y="73" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8a9bb0" text-anchor="middle">24" Touch Screen</text>
+      <rect x="555" y="110" width="130" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="620" y="133" font-family="Barlow Condensed,sans-serif" font-size="10" fill="white" text-anchor="middle">HMI ENGINE</text>
+      <text x="620" y="148" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8a9bb0" text-anchor="middle">Control Room</text>
+    </svg>`,
+    diagramFlow: `<svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <defs><marker id="arr13" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00bcd4"/></marker></defs>
+      <text x="10" y="20" font-family="Barlow Condensed,sans-serif" font-size="12" fill="#f57c00" font-weight="700">ALUR DATA SENSOR → PLC → HMI (100ms scan cycle)</text>
+      <rect x="10" y="50" width="80" height="80" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="50" y="78" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SENSOR</text>
+      <text x="50" y="93" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f57c00" text-anchor="middle">ENGINE</text>
+      <text x="50" y="108" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f57c00" text-anchor="middle">ROOM</text>
+      <line x1="90" y1="90" x2="125" y2="90" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr13)"/>
+      <rect x="125" y="65" width="80" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="165" y="87" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">PLC I/O</text>
+      <text x="165" y="102" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SCAN</text>
+      <line x1="205" y1="90" x2="240" y2="90" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr13)"/>
+      <rect x="240" y="65" width="80" height="50" rx="4" fill="#0d2144" stroke="#f57c00" stroke-width="2"/>
+      <text x="280" y="87" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">PLC</text>
+      <text x="280" y="102" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">PROGRAM</text>
+      <line x1="320" y1="90" x2="355" y2="90" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr13)"/>
+      <rect x="355" y="65" width="100" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="405" y="87" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">MODBUS</text>
+      <text x="405" y="102" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">TCP/IP</text>
+      <line x1="455" y1="90" x2="490" y2="90" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr13)"/>
+      <rect x="490" y="65" width="90" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="535" y="87" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">IAS</text>
+      <text x="535" y="102" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">SERVER</text>
+      <line x1="580" y1="90" x2="615" y2="90" stroke="#00bcd4" stroke-width="2" marker-end="url(#arr13)"/>
+      <rect x="615" y="65" width="75" height="50" rx="4" fill="#0d2144" stroke="#00bcd4" stroke-width="1.5"/>
+      <text x="652" y="87" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">HMI</text>
+      <text x="652" y="102" font-family="Barlow Condensed,sans-serif" font-size="9" fill="white" text-anchor="middle">DISPLAY</text>
+      <text x="350" y="150" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8a9bb0" text-anchor="middle">Latency total field-to-HMI: &lt;500ms | Alarm response: &lt;100ms</text>
+    </svg>`,
+    diagramLoop: `<svg viewBox="0 0 700 140" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <text x="350" y="70" font-family="Barlow Condensed,sans-serif" font-size="13" fill="#8a9bb0" text-anchor="middle">Loop kontrol berbasis PLC: Setpoint masuk melalui HMI →</text>
+      <text x="350" y="90" font-family="Barlow Condensed,sans-serif" font-size="13" fill="#8a9bb0" text-anchor="middle">PLC mengeksekusi algoritma PID → output ke actuator → sensor feedback.</text>
+    </svg>`,
+    photos: [
+      { icon: "🖥️", label: "PANEL PLC\nEngine Control Room\nSiemens S7-400 HA" },
+      { icon: "📺", label: "LAYAR IAS ANJUNGAN\nKongsberg K-Chief 600\n32\" Multi-Touch Display" }
+    ],
+    actuator: "Dalam sistem PLC-based control, actuator menerima perintah dari PLC melalui DO (Digital Output) untuk on/off atau AO (Analog Output) 4-20mA untuk modulating control. PLC mengeksekusi program setiap scan cycle (10-100ms). Jika kontrol pressure HFO heater, PLC mengirim sinyal 4-20mA ke steam regulating valve sesuai output kalkulasi PID.",
+    connection: "PLC berkomunikasi dengan IAS server melalui Modbus TCP/IP atau Profinet di jaringan Ethernet ring 100Mbps/1Gbps. IAS server menyimpan semua data proses ke historian database dan menampilkan tren, alarm, dan status di layar HMI. Operator bisa memberikan setpoint baru atau mode kontrol (auto/manual) dari HMI.",
+    caseStudy: "VLCC 'OLYMPIC LIBERTY': IAS Kongsberg K-Chief 600 mengontrol lebih dari 3,000 sensor dan 800 actuator. PLC Siemens S7-400 HA dengan redundansi hot-standby mengontrol main engine auxiliary systems. Seluruh data dilog setiap 1 detik ke historian SQL database. Remote monitoring dari kantor armada di Oslo melalui VSAT satellite link memungkinkan troubleshooting jarak jauh.",
+    discussion: [
+      "Jelaskan mengapa kapal besar menggunakan IAS daripada panel alarm individual tradisional!",
+      "Apa yang terjadi jika IAS server utama mati? Bagaimana sistem backup bekerja?",
+      "Hitung berapa banyak data yang dihasilkan per hari oleh IAS dengan 3000 sensor, update rate 1 detik!",
+      "Diskusikan risiko cybersecurity pada sistem IAS kapal yang terhubung ke internet via VSAT!"
+    ]
+  }
+];
+
+// Additional simplified weeks 6-16
+const simpleWeeks = [
+  { num:6, title:"Main Engine Control System", desc:"Sistem kontrol main engine MAN dan Wärtsilä termasuk Common Rail, ECU, dan governor elektronik.", ref:"MAN Energy Solutions & Wärtsilä" },
+  { num:7, title:"Governor & Fuel Injection Control", desc:"Prinsip governor elektronik, loop PID speed control, Woodward governor, dan linear actuator fuel rack.", ref:"Woodward Governor Systems" },
+  { num:8, title:"Generator & Power Management System", desc:"Power Management System (PMS) multi-generator, loop kontrol AVR, dan proteksi sistem kelistrikan kapal.", ref:"ABB Marine & Rolls-Royce" },
+  { num:9, title:"Boiler & Steam Control", desc:"Sistem kontrol boiler komposit, loop tekanan steam, pengaturan burner, dan safety system boiler.", ref:"Aalborg Industries & Saacke" },
+  { num:10, title:"Fuel Oil Purifier Automation", desc:"Otomasi purifier Alfa Laval ALCAP, loop kontrol temperatur heater, dan self-cleaning control.", ref:"Alfa Laval Marine & Power" },
+  { num:11, title:"Cooling System Control", desc:"Central cooling system, Temperature Control Valve (TCV) 3-way, dan optimasi sistem pendingin mesin.", ref:"Alfa Laval & Danfoss Marine" },
+  { num:12, title:"Ballast & Cargo Control", desc:"Ballast Water Management System, remote control valve, dan pengukuran level cargo tank.", ref:"Kongsberg Maritime" },
+  { num:13, title:"Alarm & Interlock System", desc:"Sistem interlock start engine, logika AND/OR alarm, Emergency Shutdown Device (ESD), dan safety matrix.", ref:"Emerson & Honeywell Process Solutions" },
+  { num:14, title:"PID Tuning Sistem Marine", desc:"Metode tuning PID: Ziegler-Nichols, Cohen-Coon, dan auto-tuning. Analisis grafik respon sistem marine.", ref:"Control Engineering Practice" },
+  { num:15, title:"Integrasi Seluruh Sistem dalam IAS", desc:"Arsitektur jaringan IAS lengkap, integrasi semua subsistem, data logging, dan remote monitoring.", ref:"Kongsberg K-Chief 700 Documentation" },
+  { num:16, title:"FINAL PROJECT — Desain Sistem Kontrol Main Engine", desc:"Desain lengkap sistem kontrol Main Engine: sensor RPM/suhu/tekanan, ECU/controller, actuator fuel injection & exhaust valve, koneksi IAS. Pilihan kapal: Bulk Carrier, Tanker, atau Container Ship.", ref:"Mahasiswa memilih jenis kapal" }
+];
+
+function generateWeekHTML(w) {
+  return `
+    <div class="week-hero">
+      <div style="max-width:1100px;margin:0 auto;">
+        <button class="back-btn" onclick="showPage('home')">← BERANDA</button>
+        <div class="week-num" style="margin-top:1rem">MINGGU ${String(w.num).padStart(2,'0')} / 16</div>
+        <div class="week-title">${w.title}</div>
+        <button class="download-btn" onclick="downloadPage()">⬇ DOWNLOAD MATERI MINGGU ${w.num}</button>
+      </div>
+    </div>
+    <div class="week-content">
+      <div class="objective-box">
+        <div class="box-title">🎯 TUJUAN PEMBELAJARAN</div>
+        <ul>${w.objectives.map(o=>`<li>${o}</li>`).join('')}</ul>
+      </div>
+      <div class="diagram-section">
+        <h3>📚 TEORI LENGKAP</h3>
+        <div class="theory-grid">${w.theory.map(t=>`<div class="theory-card"><h4>${t.title}</h4><p>${t.text}</p></div>`).join('')}</div>
+      </div>
+      <div class="diagram-section">
+        <h3>📊 DIAGRAM SISTEM (BLOK DIAGRAM)</h3>
+        <div class="diagram-container">${w.diagramBlock}</div>
+      </div>
+      <div class="diagram-section">
+        <h3>🌊 DIAGRAM ALUR (FLUIDA / SINYAL)</h3>
+        <div class="diagram-container">${w.diagramFlow}</div>
+      </div>
+      <div class="diagram-section">
+        <h3>🔄 DIAGRAM LOOP KONTROL</h3>
+        <div class="diagram-container">${w.diagramLoop}</div>
+      </div>
+      <div class="diagram-section">
+        <h3>📸 FOTO KOMPONEN INDUSTRI NYATA</h3>
+        <div class="photo-grid">${w.photos.map(p=>`<div class="photo-card"><div class="photo-placeholder"><div class="icon">${p.icon}</div><div class="label">${p.label}</div></div><div class="photo-caption">${p.label.split('\n')[0]}</div></div>`).join('')}</div>
+      </div>
+      <div class="theory-card" style="margin-bottom:2rem">
+        <h4>⚙️ PENJELASAN ACTUATOR MEKANIK</h4>
+        <p>${w.actuator}</p>
+      </div>
+      <div class="theory-card" style="margin-bottom:2rem">
+        <h4>🔌 KONEKSI KONTROL KE PERMESINAN</h4>
+        <p>${w.connection}</p>
+      </div>
+      <div class="case-study">
+        <h3>🚢 STUDI KASUS KAPAL BESAR</h3>
+        <p>${w.caseStudy}</p>
+      </div>
+      <div class="discussion-box">
+        <h3>💬 LATIHAN DISKUSI</h3>
+        ${w.discussion.map((q,i)=>`<div class="q-item"><strong>${i+1}.</strong> ${q}</div>`).join('')}
+      </div>
+    </div>
+    <div class="week-nav">
+      <button class="prev-next-btn" onclick="showWeek(${w.num-1})" ${w.num<=1?'disabled':''}>← MINGGU ${w.num-1}</button>
+      <span style="color:var(--grey-light);font-family:'Barlow Condensed';letter-spacing:2px">MINGGU ${w.num} / 16</span>
+      <button class="prev-next-btn" onclick="showWeek(${w.num+1})" ${w.num>=16?'disabled':''}>MINGGU ${w.num+1} →</button>
+    </div>
+    <footer>
+      <div class="footer-title">WEBSITE PEMBELAJARAN SISTEM KONTROL PERMESINAN KAPAL BESAR</div>
+      <div class="footer-dosen">Rafael Sukirno, CE</div>
+      <div class="footer-sub">Dosen Senior Sistem Kontrol Permesinan Kapal | 2026</div>
+    </footer>`;
+}
+
+function generateSimpleWeekHTML(sw) {
+  return `
+    <div class="week-hero">
+      <div style="max-width:1100px;margin:0 auto;">
+        <button class="back-btn" onclick="showPage('home')">← BERANDA</button>
+        <div class="week-num" style="margin-top:1rem">MINGGU ${String(sw.num).padStart(2,'0')} / 16</div>
+        <div class="week-title">${sw.title}</div>
+        <button class="download-btn" onclick="downloadPage()">⬇ DOWNLOAD MATERI MINGGU ${sw.num}</button>
+      </div>
+    </div>
+    <div class="week-content">
+      <div class="objective-box">
+        <div class="box-title">🎯 TOPIK MINGGU INI</div>
+        <p style="padding-left:1.2rem;line-height:1.8">${sw.desc}</p>
+      </div>
+      <div class="case-study" style="margin-top:1.5rem">
+        <h3>📖 REFERENSI INDUSTRI</h3>
+        <p>${sw.ref}</p>
+      </div>
+      ${sw.num === 16 ? `
+      <div class="discussion-box" style="margin-top:1.5rem">
+        <h3>📋 TUGAS FINAL PROJECT</h3>
+        <div class="q-item">Mahasiswa memilih jenis kapal: <span class="ship-badge">BULK CARRIER</span> <span class="ship-badge">TANKER</span> <span class="ship-badge">CONTAINER SHIP</span></div>
+        <div class="q-item">1. Buat Diagram Sistem Kontrol Main Engine lengkap dengan semua subsistem</div>
+        <div class="q-item">2. Buat Diagram Alur sinyal dari sensor ke controller ke actuator</div>
+        <div class="q-item">3. Buat Diagram Loop tertutup untuk speed control dan temperature control</div>
+        <div class="q-item">4. Identifikasi semua sensor (RPM, suhu, tekanan) beserta spesifikasi teknisnya</div>
+        <div class="q-item">5. Jelaskan ECU/controller dan koneksinya ke IAS kapal</div>
+        <div class="q-item">6. Presentasi 20 menit dengan visual diagram teknis yang profesional</div>
+      </div>` : `
+      <div class="discussion-box" style="margin-top:1.5rem">
+        <h3>💬 LATIHAN DISKUSI</h3>
+        <div class="q-item">1. Identifikasi komponen utama sistem ${sw.title} pada kapal besar!</div>
+        <div class="q-item">2. Jelaskan alur sinyal kontrol dari sensor ke actuator pada sistem ini!</div>
+        <div class="q-item">3. Apa parameter yang dimonitor dan dikontrol dalam sistem ini?</div>
+        <div class="q-item">4. Bagaimana sistem ini terintegrasi dengan IAS kapal?</div>
+      </div>`}
+      <div class="diagram-section" style="margin-top:1.5rem">
+        <div class="diagram-container" style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--grey-light);flex-direction:column;gap:0.5rem">
+          <div style="font-size:3rem">📐</div>
+          <div style="font-family:'Barlow Condensed';letter-spacing:2px;font-size:0.9rem">DIAGRAM TEKNIS TERSEDIA DI MATERI DOWNLOAD</div>
+          <button class="download-btn" onclick="downloadPage()" style="margin-top:0.5rem;font-size:0.85rem;padding:8px 16px">⬇ DOWNLOAD PDF DIAGRAM</button>
+        </div>
+      </div>
+    </div>
+    <div class="week-nav">
+      <button class="prev-next-btn" onclick="showWeek(${sw.num-1})">← MINGGU ${sw.num-1}</button>
+      <span style="color:var(--grey-light);font-family:'Barlow Condensed';letter-spacing:2px">MINGGU ${sw.num} / 16</span>
+      <button class="prev-next-btn" onclick="showWeek(${sw.num+1})" ${sw.num>=16?'disabled':''}>MINGGU ${sw.num+1} →</button>
+    </div>
+    <footer>
+      <div class="footer-title">WEBSITE PEMBELAJARAN SISTEM KONTROL PERMESINAN KAPAL BESAR</div>
+      <div class="footer-dosen">Rafael Sukirno, CE</div>
+      <div class="footer-sub">Dosen Senior Sistem Kontrol Permesinan Kapal | 2026</div>
+    </footer>`;
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showWeek(num) {
+  const wp = document.getElementById('week-page');
+  const wc = document.getElementById('week-content');
+  const detailed = weekData.find(w => w.num === num);
+  if (detailed) {
+    wc.innerHTML = generateWeekHTML(detailed);
+  } else {
+    const simple = simpleWeeks.find(w => w.num === num);
+    if (simple) wc.innerHTML = generateSimpleWeekHTML(simple);
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  wp.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toggleMenu() {
+  document.getElementById('weekMenu').classList.toggle('open');
+}
+
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('weekMenu');
+  if (!e.target.closest('#weekMenu') && !e.target.closest('.nav-week-btn')) {
+    menu.classList.remove('open');
+  }
+});
+
+function downloadPage() {
+  alert('Fitur download materi tersedia setelah website dipublikasikan di server. Hubungi dosen untuk mendapatkan file PDF materi.');
+}
+</script>
+</body>
+</html>
